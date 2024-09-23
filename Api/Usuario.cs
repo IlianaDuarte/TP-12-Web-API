@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Identity;
 
 namespace Api;
 
@@ -11,6 +10,6 @@ public class Usuario
     public required string Contraseñia {get ; set;}
     public bool Habilitado {get; set;}
     public DateTime FechaCreacion {get; set;}
-
     public List<Rol> Roles = new List<Rol>();
+
 }
