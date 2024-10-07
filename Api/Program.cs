@@ -26,14 +26,15 @@ List<Usuario> Usuarios = [
 ];
 
 List<Rol> roles = [
-    new Rol {IdRol = 1, Nombre = "Mariangel", Habilitado = true, FechaCreacion = DateTime.Now},
-    new Rol {IdRol = 2, Nombre = "Vanina", Habilitado = true, FechaCreacion = DateTime.Now}
+    new Rol {IdRol = 1, Nombre = "Rector", Habilitado = true, FechaCreacion = DateTime.Now},
+    new Rol {IdRol = 2, Nombre = "Preceptor", Habilitado = true, FechaCreacion = DateTime.Now},
+    new Rol {IdRol = 3, Nombre = "Profesor", Habilitado = true, FechaCreacion = DateTime.Now}
 ];
 
 //crea un nuevo alumno en la lista
-app.MapPost("/usuario", ([FromBody] Usuario usuario) =>
-{
-    if(string.IsNullOrWhiteSpace(usuario.Nombre)|| 
+app.MapPost("/usuario", ([FromBody] Usuario usuario) => {
+    // Validar si alguno de los campos del usuario es vacío o null
+    if (string.IsNullOrWhiteSpace(usuario.Nombre) ||
         string.IsNullOrWhiteSpace(usuario.Email) ||
         string.IsNullOrWhiteSpace(usuario.NombreUsuario) ||
         string.IsNullOrWhiteSpace(usuario.Contraseñia))
@@ -43,10 +44,9 @@ app.MapPost("/usuario", ([FromBody] Usuario usuario) =>
     usuario.FechaCreacion = DateTime.Now;
     usuario.Habilitado = true;
     Usuarios.Add(usuario);
-    return Results.Created();
+    return Results.Created($"/usuario/{usuario.IdUsuario}", usuario);
+});
 
-})
-    .WithTags("Usuario");
 //Lee listado de usuarios
 app.MapGet("/usuarios", () =>
 {
@@ -72,22 +72,28 @@ app.MapGet("/usuario/{IdUsuario}", (int IdUsuario) =>
 app.MapPut("/usuario", ([FromQuery] int IdUsuario, [FromBody] Usuario usuario) =>
 {
     var usuarioActualizar = Usuarios.FirstOrDefault(usuario => usuario.IdUsuario == IdUsuario);
-    if (usuarioActualizar != null)
+    
+    if (usuarioActualizar == null)
     {
-        usuarioActualizar.Nombre = usuario.Nombre;
-        return Results.Ok(Usuarios); //Codigo 200
+        return Results.NotFound(); // 404
     }
-    else
-    {
-        return Results.NotFound(); //Codigo 404
+    if (usuario.Nombre == null){
+
+        return Results.BadRequest(); //400 Bad Request
     }
+
+    usuarioActualizar.Email = usuario.Email;
+    usuarioActualizar.NombreUsuario = usuario.NombreUsuario;
+    usuarioActualizar.Contraseñia = usuario.Contraseñia;
+
+    return Results.NoContent(); // 204
 })
     .WithTags("Usuario");
 
-
+//Elimina usuarios
 app.MapDelete("/usuario", ([FromQuery] int IdUsuario) =>
 {
-    var usuarioEliminar = Usuarios.FirstOrDefault(Usuario => Usuario.IdUsuario == IdUsuario);
+    var usuarioEliminar = Usuarios.FirstOrDefault(usuario => usuario.IdUsuario == IdUsuario);
     if (usuarioEliminar != null)
     {
         Usuarios.Remove(usuarioEliminar);
@@ -101,24 +107,30 @@ app.MapDelete("/usuario", ([FromQuery] int IdUsuario) =>
     .WithTags("Usuario");
 
 
+//Crea un rol
 app.MapPost("/rol", ([FromBody] Rol rol) =>
 {
-    if(string.IsNullOrWhiteSpace(rol.Nombre) || rol.IdRol == 0)
+    if(string.IsNullOrWhiteSpace(rol.Nombre))
     {
-        return Results.BadRequest("Datos del rol no son válidos"); // Código 400
+        return Results.BadRequest(); // Código 400
     }
+
+    rol.FechaCreacion = DateTime.Now;
+    rol.Habilitado = true;
     roles.Add(rol);
-    return Results.Ok(roles);
+    return Results.Created($"/usuario/{rol.IdRol}", rol);
 })
     .WithTags("Rol");
 
 
-app.MapGet("/rol", () =>
+//Lee listado de rol
+app.MapGet("/roles", () =>
 {
     return Results.Ok(roles);
 })
     .WithTags("Rol");
 
+//Lee por Id
 app.MapGet("/rol/{IdRol}", (int IdRol) =>
 {
     var rolPorId = roles.FirstOrDefault(rol => rol.IdRol == IdRol);
@@ -133,7 +145,7 @@ app.MapGet("/rol/{IdRol}", (int IdRol) =>
 })
     .WithTags("Rol");
 
-
+//Actualiza roles
 app.MapPut("/rol", ([FromQuery] int IdRol, [FromBody] Rol rol) =>
 {
     var rolActualizar = roles.FirstOrDefault(rol => rol.IdRol == IdRol);
@@ -149,7 +161,7 @@ app.MapPut("/rol", ([FromQuery] int IdRol, [FromBody] Rol rol) =>
 })
     .WithTags("Rol");
 
-
+//Elimina roles
 app.MapDelete("/rol", ([FromQuery] int IdRol) =>
 {
     var rolEliminar = roles.FirstOrDefault(Rol => Rol.IdRol == IdRol);
