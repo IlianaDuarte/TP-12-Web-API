@@ -178,6 +178,7 @@ app.MapDelete("/rol", ([FromQuery] int IdRol) =>
     .WithTags("Rol");
 
 
+
 app.MapPost("/rol/{IdRol}/usuario/{IdUsuario}", (int IdRol, int IdUsuario) =>
 {
     var rol = roles.FirstOrDefault(rol => rol.IdRol == IdRol);
