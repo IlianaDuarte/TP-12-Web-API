@@ -69,7 +69,7 @@ app.MapGet("/usuario/{IdUsuario}", (int IdUsuario) =>
     .WithTags("Usuario");
 
 //Actualiza usaurios
-app.MapPut("/usuario", ([FromQuery] int IdUsuario, [FromBody] Usuario usuario) =>
+app.MapPut("/usuario/{IdUsuario}", ([FromQuery] int IdUsuario, [FromBody] Usuario usuario) =>
 {
     var usuarioActualizar = Usuarios.FirstOrDefault(usuario => usuario.IdUsuario == IdUsuario);
     
@@ -179,7 +179,7 @@ app.MapDelete("/rol", ([FromQuery] int IdRol) =>
 
 
 
-app.MapPost("/rol/{IdRol}/usuario/{IdUsuario}", (int IdRol, int IdUsuario) =>
+/*app.MapPost("/rol/{IdRol}/usuario/{IdUsuario}", (int IdRol, int IdUsuario) =>
 {
     var rol = roles.FirstOrDefault(rol => rol.IdRol == IdRol);
     var usuario = Usuarios.FirstOrDefault(usuario => usuario.IdUsuario == IdUsuario);
@@ -242,5 +242,6 @@ app.MapDelete("/usuario/{IdUsuario}/rol/{IdRol}", (int IdUsuario, int IdRol) =>
     return Results.NotFound();
 })
     .WithTags("Usuario");
+*/
 
 app.Run();

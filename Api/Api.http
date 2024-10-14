@@ -4,3 +4,61 @@ GET {{Api_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+GET {{Api_HostAddress}}/Usuarios/
+Accept: application/json
+
+## Ver por ID
+GET {{Api_HostAddress}}/Usuario/
+Accept: application/json
+###
+POST {{Api_HostAddress}}/Usuario/
+Content-Type: application/json
+{
+    "Nombre": "mari",
+    "Email": "mariangel@gmail.com",
+    "NombreUsuario" : "Mariangel",
+    "Contraseñia" : "tay1989"
+}
+###
+PUT {{Api_HostAddress}}/Usuario?IdUsuario=2  
+Content-Type: application/json
+{
+    "Nombre": "Vani",
+    "Email" : "vanina@gmail.com",
+    "NombreUsuario" : "VaniBlas",
+    "Contraseñia" : "gatitos"
+}
+###
+DELETE {{Api_HostAddress}}/Usuario?IdUsuario=2
+Accept: application/json
+###
+GET {{Api_HostAddress}}/roles/
+Accept: application/json
+
+## Ver por ID
+
+GET {{Api_HostAddress}}/rol
+Accept: application/json
+
+###
+POST {{Api_HostAddress}}/Rol/
+Content-Type: application/json
+{
+    "Nombre" : "Rector"
+}
+###
+PUT {{Api_HostAddress}}/Rol?IdRol=2
+Content-Type: application/json
+{
+    "Nombre" : "Preceptor"
+}
+###
+DELETE {{Api_HostAddress}}/Rol?IdRol=2
+Accept: application/json
+###
+POST {{Api_HostAddress}}/Rol/2/Usuario/2
+Content-Type: application/json
+###
+DELETE {{Api_HostAddress}}/Rol/2/Usuario/2
+Content-Type: application/json
+###
