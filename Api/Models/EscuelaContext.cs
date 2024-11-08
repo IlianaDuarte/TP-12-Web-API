@@ -21,7 +21,8 @@ public partial class EscuelaContext : DbContext
 
     public virtual DbSet<Usuariorol> Usuariorols { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {}
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){}
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Rol>(entity =>
